@@ -19,7 +19,7 @@
 #'
 #' @importFrom fitdistrplus fitdist gofstat
 #' @importFrom lubridate as_date
-#'
+#' @importFrom truncnorm rtruncnorm
 #'
 #' @examples
 #' sampleUnivariate()

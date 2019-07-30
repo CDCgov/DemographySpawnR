@@ -18,6 +18,7 @@
 #'
 #'
 #' @importFrom fitdistrplus fitdist gofstat
+#' @importFrom lubridate as_date
 #'
 #'
 #' @examples

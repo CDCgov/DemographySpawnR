@@ -11,7 +11,8 @@ sampleUnivariate(inputData, n, dateFormat = "\%Y\%m\%d")
 
 \item{n}{number of rows in output/simulated dataset}
 
-\item{dateFormat}{format of the date variable (if one exists) in the original dataset. Default is "YYYYMMDD."}
+\item{dateFormat}{format of the date variable(s) (if one exists) in the original dataset. Default is "YYYYMMDD."
+A set of formats can be input with c().}
 }
 \value{
 A dataset with n rows that is distributionally similar to input dataset.

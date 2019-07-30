@@ -25,5 +25,6 @@ Imports:
     MASS,
     dplyr,
     plyr,
-    fitdistrplus
+    fitdistrplus,
+    truncnorm
 BugReports: https://github.com/CDCgov/DemographySpawnR/issues

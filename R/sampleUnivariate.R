@@ -67,6 +67,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
     #   simData[,i] = dates2
     #
     # }
+    #
     
     
     

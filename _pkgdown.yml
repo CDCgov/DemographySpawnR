@@ -1,0 +1,7 @@
+url: https://cdcgov.github.io/DemographySpawnR/
+
+template:
+  params:
+    bootswatch: flatly
+
+destination: docs

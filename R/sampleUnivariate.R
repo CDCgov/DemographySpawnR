@@ -81,7 +81,10 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       )
       
     }
-    else  if (all(is.na(inputData[,i])) |
+    
+    else if (is.factor(inputData[, i]) & nlevels(as.factor(inputData[,i])) > 10) next
+    
+    else if (all(is.na(inputData[, i])) |
               (all(is.character(inputData[,i])) & length(unique(inputData[,i])) == nrow(inputData))) next
     
     ### RETURNS NA's

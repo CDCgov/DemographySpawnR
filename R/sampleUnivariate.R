@@ -69,12 +69,8 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
     # }
     #
     
-    
-    
-    
-    
-    
-    if (length(unique(inputData[, i])) < 10 | all(is.factor(inputData[,i]))) {
+
+    if (length(unique(inputData[, i])) < 10 ) {
       
       simData[,i] = sample(c(as.character(as.data.frame(table(inputData[,i], exclude = NULL))$Var1)), n, TRUE,
                            prob = c(as.data.frame(table(inputData[,i], exclude = NULL))$Freq)
@@ -82,7 +78,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       
     }
     
-    else if (is.factor(inputData[, i]) & nlevels(as.factor(inputData[,i])) > 10) next
+    else if (!is.numeric(inputData[, i]) & is.factor(inputData[, i]) & nlevels(as.factor(inputData[,i])) > 10){simData[, i] = NA}
     
     else if (all(is.na(inputData[, i])) |
               (all(is.character(inputData[,i])) & length(unique(inputData[,i])) == nrow(inputData))) next

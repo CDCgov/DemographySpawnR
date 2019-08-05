@@ -103,7 +103,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[1]], ', ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[2]], ')'))))
       if (min(inputData[,i], na.rm = T) == 0) {
-        simData[, i] = rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = 0, b = Inf)
+        simData[, i] = rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf)
         simData[, i] = t(unname(data.frame(lapply(simData[, i], 
                                                   function(cc) cc[sample(c(NA, TRUE), 
                                                                          prob = c(sum(is.na(inputData[, i])), nrow(inputData)-sum(is.na(inputData[, i]))),
@@ -111,7 +111,12 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       }
       
       else {
-        simData[, i] = round(rnorm(n, mean = mean(inputData[,i], na.rm = T), sd = sd(inputData[,i], na.rm = T)))
+        simData[, i] = round(rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf))
+        
+        
+        ## Below, is a function that adds NA's randomly with a probability of insertion in each row 
+        ## equal to the proportion of NA's in the original dataset
+        
         simData[, i] = t(unname(data.frame(lapply(simData[, i], 
                                                   function(cc) cc[sample(c(NA, TRUE), 
                                                                          prob = c(sum(is.na(inputData[, i])), nrow(inputData)-sum(is.na(inputData[, i]))),
@@ -123,8 +128,13 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       # simData[,i] = eval(parse(text = paste0("r", names(which.min(fits$aic)), '(', 'n, ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[1]], ', ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[2]], ')')))
-      simData[,i] = (rnorm(n, mean = mean(inputData[,i], na.rm = T), sd = sd(inputData[,i], na.rm = T)))
-      simData[, i] = t(unname(data.frame(lapply(simData[, i], 
+        simData[, i] = (rtruncnorm(n, mean = mean(inputData[,i], na.rm = T), sd = sd(inputData[,i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf))
+        
+        
+        ## Below, is a function that adds NA's randomly with a probability of insertion in each row 
+        ## equal to the proportion of NA's in the original dataset
+        
+        simData[, i] = t(unname(data.frame(lapply(simData[, i], 
                                                 function(cc) cc[sample(c(NA, TRUE), 
                                                                        prob = c(sum(is.na(inputData[, i])), nrow(inputData)-sum(is.na(inputData[, i]))),
                                                                        size = 1, replace = TRUE)]))))

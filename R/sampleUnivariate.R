@@ -22,7 +22,7 @@
 #' @importFrom truncnorm rtruncnorm
 #' 
 #' @examples
-#' sampleUnivariate()
+#' sampleUnivariate(dat, 10)
 
 sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   
@@ -32,7 +32,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   
   possibleDates = which(sapply(inputData,
                                function(x)
-                                 !all(is.na(as_date(as.character(x),
+                                 !all(is.na(lubridate::as_date(as.character(x),
                                                     format=dateFormat, tz = "America/New_York")))))
   
   possibleDates
@@ -40,10 +40,10 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   for (k in (unname(possibleDates))) {
     
     
-    simData[, k] = sample(seq(min(as_date(as.POSIXct(as.character(as.data.frame(inputData)[, k]), tz = "America/New_York", 
+    simData[, k] = sample(seq(min(lubridate::as_date(as.POSIXct(as.character(as.data.frame(inputData)[, k]), tz = "America/New_York", 
                                                      tryFormats = dateFormat)), 
                                   na.rm = T),
-                              max(as_date(as.POSIXct(as.character(as.data.frame(inputData)[, k]), tz = "America/New_York",
+                              max(lubridate::as_date(as.POSIXct(as.character(as.data.frame(inputData)[, k]), tz = "America/New_York",
                                                      tryFormats = dateFormat)),
                                   na.rm = T), 
                               by ="day"), n)

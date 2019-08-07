@@ -40,13 +40,9 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   for (k in (unname(possibleDates))) {
     
     
-    simData[, k] = sample(seq(min(lubridate::as_date(as.POSIXct(as.character(as.data.frame(inputData)[, k]), tz = "America/New_York", 
-                                                     tryFormats = dateFormat)), 
-                                  na.rm = T),
-                              max(lubridate::as_date(as.POSIXct(as.character(as.data.frame(inputData)[, k]), tz = "America/New_York",
-                                                     tryFormats = dateFormat)),
-                                  na.rm = T), 
-                              by ="day"), n)
+    kernalDates = kde(c(na.omit(as.numeric(lubridate::as_date(as.POSIXct(as.character(inputData[, k]), format = dateFormat))))))
+    
+    simData[, k] = lubridate::as_date(floor(rkde(n, kernalDates)))
     
     names(simData)[k] = names(inputData)[k]
   }
@@ -103,7 +99,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[1]], ', ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[2]], ')'))))
       if (min(inputData[,i], na.rm = T) == 0) {
-        simData[, i] = rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf)
+        simData[, i] = truncnorm::rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf)
         simData[, i] = t(unname(data.frame(lapply(simData[, i], 
                                                   function(cc) cc[sample(c(NA, TRUE), 
                                                                          prob = c(sum(is.na(inputData[, i])), nrow(inputData)-sum(is.na(inputData[, i]))),
@@ -111,7 +107,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       }
       
       else {
-        simData[, i] = round(rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf))
+        simData[, i] = round(truncnorm::rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf))
         
         
         ## Below, is a function that adds NA's randomly with a probability of insertion in each row 
@@ -128,7 +124,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       # simData[,i] = eval(parse(text = paste0("r", names(which.min(fits$aic)), '(', 'n, ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[1]], ', ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[2]], ')')))
-        simData[, i] = (rtruncnorm(n, mean = mean(inputData[,i], na.rm = T), sd = sd(inputData[,i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf))
+        simData[, i] = (truncnorm::rtruncnorm(n, mean = mean(inputData[,i], na.rm = T), sd = sd(inputData[,i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf))
         
         
         ## Below, is a function that adds NA's randomly with a probability of insertion in each row 

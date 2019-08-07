@@ -43,8 +43,12 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
     # Calculate kernel density estimate of dates -- similar to epi curve
     kernalDates = ks::kde(c(na.omit(as.numeric(lubridate::as_date(as.POSIXct(as.character(inputData[, k]), format = dateFormat))))))
     
+    
+    # samples numbes from previous calculated denstiy and converts them to dates
     simData[, k] = lubridate::as_date(floor(ks::rkde(n, kernalDates)))
     
+    
+    # inserts NA's randomly into the rows with prob = proportion missing in original dataset
     simData[, k] = t(unname(data.frame(lapply(simData[, k], 
                                               function(cc) cc[sample(c(NA, TRUE), 
                                                                      prob = c(sum(is.na(inputData[, k])), nrow(inputData)-sum(is.na(inputData[, k]))),
@@ -58,21 +62,8 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   for (i in 1:ncol(inputData))  { # (1)
     if (i %in% unname(possibleDates)) next
     
-    # if (any(str_detect(complete.cases(as.character(inputData[,i])), datePattern))) {
-    #
-    #   dateFormatted = as.Date(as.charaMcter(inputData[,i]))
-    #
-    #
-    #   dates2 = sample(seq(min(dateFormatted, na.rm = T),
-    #                       max(dateFormatted, na.rm = T), by ="day"), n)
-    #
-    #   simData[,i] = dates2
-    #
-    # }
-    #
-    
 
-    if (length(unique(inputData[, i])) < 10 ) {
+    if (length(unique(inputData[, i])) <= 10 ) {
       
       simData[,i] = sample(c(as.character(as.data.frame(table(inputData[,i], exclude = NULL))$Var1)), n, TRUE,
                            prob = c(as.data.frame(table(inputData[,i], exclude = NULL))$Freq)

@@ -45,6 +45,11 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
     
     simData[, k] = lubridate::as_date(floor(ks::rkde(n, kernalDates)))
     
+    simData[, k] = t(unname(data.frame(lapply(simData[, k], 
+                                              function(cc) cc[sample(c(NA, TRUE), 
+                                                                     prob = c(sum(is.na(inputData[, k])), nrow(inputData)-sum(is.na(inputData[, k]))),
+                                                                     size = 1, replace = TRUE)]))))
+    
     names(simData)[k] = names(inputData)[k]
   }
   #   

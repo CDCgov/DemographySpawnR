@@ -71,14 +71,19 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       
     }
     
-    else if (!is.numeric(inputData[, i]) & nlevels(as.factor(inputData[,i])) > 10){simData[, i] = NA}
+    #if the data is not numeric and there are a ton of levels, just skip it and add NA's for that column
+    else if (!is.numeric(inputData[, i]) & nlevels(as.factor(inputData[,i])) > 10) {
+      simData[, i] = NA
+    }
     
+    # if a column is all NA's or a different character/string for each row, probably not that important -- NA's
     else if (all(is.na(inputData[, i])) |
-              (all(is.character(inputData[,i])) & length(unique(inputData[,i])) == nrow(inputData))) next
+              (all(is.character(inputData[,i])) & length(unique(inputData[,i])) == nrow(inputData))) {
+      simData[, i] = NA
+    }
     
-    ### RETURNS NA's
     
-    
+    # if we have rounded values, round the simulated values to the whole number
     else if (any(na.omit(inputData[,i]) %% 1 == 0)) {
       
       
@@ -95,6 +100,8 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
       # simData[,i] = round(eval(parse(text = paste0("r", names(which.min(fits$aic)), '(', 'n, ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[1]], ', ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[2]], ')'))))
+      
+      
       if (min(inputData[,i], na.rm = T) == 0) {
         simData[, i] = truncnorm::rtruncnorm(n, mean = mean(inputData[, i], na.rm = T), sd = sd(inputData[, i], na.rm = T), a = min(inputData[, i], na.rm = T), b = Inf)
         simData[, i] = t(unname(data.frame(lapply(simData[, i], 
@@ -116,7 +123,11 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
                                                                          size = 1, replace = TRUE)]))))
       }
       
-    } else {
+      
+      
+    } 
+    ## if the number is not rounded, then just keep the decimals
+    else {
       
       # simData[,i] = eval(parse(text = paste0("r", names(which.min(fits$aic)), '(', 'n, ',
       #                              listFits[[which.min(fits$aic)[[1]]]][[1]][[1]], ', ',

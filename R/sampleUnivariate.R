@@ -40,7 +40,7 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   
   for (k in (unname(possibleDates))) {
     
-    
+    # Calculate kernel density estimate of dates -- similar to epi curve
     kernalDates = ks::kde(c(na.omit(as.numeric(lubridate::as_date(as.POSIXct(as.character(inputData[, k]), format = dateFormat))))))
     
     simData[, k] = lubridate::as_date(floor(ks::rkde(n, kernalDates)))

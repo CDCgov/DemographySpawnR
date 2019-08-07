@@ -20,6 +20,7 @@
 #' @importFrom fitdistrplus fitdist gofstat
 #' @importFrom lubridate as_date
 #' @importFrom truncnorm rtruncnorm
+#' @importFrom ks kde rkde
 #' 
 #' @examples
 #' sampleUnivariate(dat, 10)
@@ -40,9 +41,9 @@ sampleUnivariate = function (inputData, n, dateFormat = "%Y%m%d") {
   for (k in (unname(possibleDates))) {
     
     
-    kernalDates = kde(c(na.omit(as.numeric(lubridate::as_date(as.POSIXct(as.character(inputData[, k]), format = dateFormat))))))
+    kernalDates = ks::kde(c(na.omit(as.numeric(lubridate::as_date(as.POSIXct(as.character(inputData[, k]), format = dateFormat))))))
     
-    simData[, k] = lubridate::as_date(floor(rkde(n, kernalDates)))
+    simData[, k] = lubridate::as_date(floor(ks::rkde(n, kernalDates)))
     
     names(simData)[k] = names(inputData)[k]
   }

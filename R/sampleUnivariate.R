@@ -16,7 +16,7 @@
 #'
 #' @export
 #'
-#'
+#' @importFrom stats sd
 #' @importFrom fitdistrplus fitdist gofstat
 #' @importFrom lubridate as_date
 #' @importFrom truncnorm rtruncnorm
